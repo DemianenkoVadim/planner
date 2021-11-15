@@ -28,8 +28,9 @@ public class UserRestController {
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        UserDto result = UserDto.fromUser(user);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+//        UserDto result = UserDto.fromUser(user);
+//        return new ResponseEntity<>(result, HttpStatus.OK);
+        return null;
     }
 
     @PostMapping(path = "register")
@@ -37,8 +38,9 @@ public class UserRestController {
         if (bindingResult.hasErrors())
             return register(user, bindingResult); // todo maybe I should return a page of registration ?
         try {
-            User consumer = userService.register(user.toUser());
-            return ResponseEntity.ok(UserDto.fromUser(consumer));
+//            User consumer = userService.register(user.toUser());
+//            return ResponseEntity.ok(UserDto.fromUser(consumer));
+            return null;
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("er");
         }

@@ -6,10 +6,10 @@ import org.mapstruct.factory.Mappers;
 import ua.com.alevel.plannerbox.dto.TaskBoardDto;
 import ua.com.alevel.plannerbox.entity.TaskBoard;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface TaskBoardMapper {
 
-    TaskBoardMapper INSTANCE = Mappers.getMapper(TaskBoardMapper.class);
+//    TaskBoardMapper INSTANCE = Mappers.getMapper(TaskBoardMapper.class);
 
     TaskBoardDto taskBoardDto(TaskBoard taskBoard);
 

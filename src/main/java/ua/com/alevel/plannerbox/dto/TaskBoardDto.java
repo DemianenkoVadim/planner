@@ -1,5 +1,6 @@
 package ua.com.alevel.plannerbox.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import ua.com.alevel.plannerbox.entity.TaskBoard;
@@ -7,11 +8,9 @@ import ua.com.alevel.plannerbox.entity.status.TaskPriority;
 import ua.com.alevel.plannerbox.entity.status.TaskStatus;
 import ua.com.alevel.plannerbox.entity.status.TaskType;
 
-import javax.validation.constraints.Future;
-import javax.validation.constraints.FutureOrPresent;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -24,21 +23,23 @@ public class TaskBoardDto {
     private String taskDescription;
 
     @FutureOrPresent(message = "The start date must be present or future")
-    @NotEmpty(message = "Field start date should not be empty")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime startDate;
 
     @Future(message = "The end date must be greater than the existing one")
-    @NotEmpty(message = "Field end date should not be empty")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime endDate;
 
-    @NotEmpty(message = "Field status should not be empty")
+    @NotNull(message = "Field status should not be empty")
     private TaskStatus status;
 
-    @NotEmpty(message = "Field priority should not be empty")
+    @NotNull(message = "Field priority should not be empty")
     private TaskPriority priority;
 
-    @NotEmpty(message = "Field type should not be empty")
+    @NotNull(message = "Field type should not be empty")
     private TaskType type;
+
+    private List<UserDto> users;
 
     public TaskBoard toTaskBoard() {
         TaskBoard taskBoard = new TaskBoard();
