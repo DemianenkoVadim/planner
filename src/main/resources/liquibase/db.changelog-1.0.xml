@@ -1,0 +1,168 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="1.0.0" author="vadim.demianenko">
+        <createTable tableName="users">
+
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="username" type="varchar(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="email" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="first_name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="last_name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="password" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created" type="timestamp" defaultValue="current_timestamp()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated" type="timestamp" defaultValue="current_timestamp()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="status" type="varchar(25)" defaultValue="ACTIVE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0.1" author="vadim.demianenko">
+        <createTable tableName="roles">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="name" type="varchar(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="created" type="timestamp" defaultValue="current_timestamp()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated" type="timestamp" defaultValue="current_timestamp()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="status" type="varchar(25)" defaultValue="ACTIVE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0.2" author="vadim.demianenko">
+        <createTable tableName="user_roles">
+            <column name="user_id" type="bigint">
+            </column>
+
+            <column name="role_id" type="bigint">
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0.3" author="vadim.demianenko">
+        <addForeignKeyConstraint baseTableName="user_roles"
+                                 baseColumnNames="user_id"
+                                 constraintName="fk_user_roles_user"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="1.0.4" author="vadim.demianenko">
+        <addForeignKeyConstraint baseTableName="user_roles"
+                                 baseColumnNames="role_id"
+                                 constraintName="fk_user_roles_roles"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedTableName="roles"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="1.0.5" author="vadim.demianenko">
+        <insert tableName="roles">
+            <column name="name" value="ROLE_USER"/>
+        </insert>
+
+        <insert tableName="roles">
+            <column name="name" value="ROLE_ADMIN"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.6" author="vadim.demianenko">
+        <createTable tableName="personal_task_box">
+
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="user_id" type="bigint"/>
+
+            <column name="description" type="varchar(255)">
+                <constraints nullable="true" unique="false" />
+            </column>
+
+            <column name="task_start_date" type="timestamp" defaultValue="current_timestamp()">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="task_end_date" type="timestamp" defaultValue="current_timestamp()">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="task_priority" type="varchar(25)" defaultValue="LOW">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="task_status" type="varchar(25)" defaultValue="TODO">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0.7" author="vadim.demianenko">
+        <addForeignKeyConstraint baseTableName="personal_task_box"
+                                 baseColumnNames="user_id"
+                                 constraintName="user"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 onUpdate="RESTRICT"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="1.0.8" author="vadim.demianenko">
+        <insert tableName="personal_task_box">
+            <column name="user_id" type="bigint" value="NULL"/>
+        </insert>
+    </changeSet>
+
+
+
+
+
+
+
+
+
+</databaseChangeLog>
