@@ -7,5 +7,7 @@ import ua.com.alevel.plannerbox.entity.UserRole;
 @Repository
 public interface RoleRepository extends JpaRepository<UserRole, Long> {
 
-    UserRole findByName(String name);
+    UserRole findByRole(String role);
+
+//    UserRole getUserRoleByName(String defaultRole);
 }

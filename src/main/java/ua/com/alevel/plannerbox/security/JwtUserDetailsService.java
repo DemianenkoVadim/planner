@@ -13,6 +13,7 @@ import ua.com.alevel.plannerbox.entity.UserRole;
 import ua.com.alevel.plannerbox.service.UserService;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,21 +30,20 @@ public class JwtUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userService.findByUsername(username);
-
         if (user == null) {
-            throw new UsernameNotFoundException("user with username: " + username + " not found");
+            log.error("User with username {} not found in the database", username);
+            throw new UsernameNotFoundException("User with username: " + username + " is not found");
         }
-
-        org.springframework.security.core.userdetails.User user1 =
-                new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), mapToGrantedAuthorities(user.getRoles()));
-
-        log.info("loadUserByUserName - user with username: {} successfully loaded", username);
-        return user1;
+        log.info("User found in the database: {}", username);
+        return new org.springframework.security.core.userdetails.User(
+                user.getUsername(),
+                user.getPassword(),
+                mapToGrantedAuthorities(user.getRoles()));
     }
 
-    private static List<GrantedAuthority> mapToGrantedAuthorities(List<UserRole> userRoles) {
+    private static List<GrantedAuthority> mapToGrantedAuthorities(Set<UserRole> userRoles) {
         return userRoles.stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName()))
+                .map(role -> new SimpleGrantedAuthority(role.getRole()))
                 .collect(Collectors.toList());
     }
 }

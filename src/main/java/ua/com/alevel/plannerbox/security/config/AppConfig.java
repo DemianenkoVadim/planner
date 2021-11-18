@@ -1,4 +1,4 @@
-package ua.com.alevel.plannerbox.config;
+package ua.com.alevel.plannerbox.security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

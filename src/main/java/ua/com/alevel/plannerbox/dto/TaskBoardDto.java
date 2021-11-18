@@ -41,27 +41,27 @@ public class TaskBoardDto {
 
     private List<UserDto> users;
 
-    public TaskBoard toTaskBoard() {
-        TaskBoard taskBoard = new TaskBoard();
-        taskBoard.setId(id);
-        taskBoard.setTaskDescription(taskDescription);
-        taskBoard.setStartDate(startDate);
-        taskBoard.setEndDate(endDate);
-        taskBoard.setStatus(status);
-        taskBoard.setPriority(priority);
-        taskBoard.setType(type);
-        return taskBoard;
-    }
-
-    public static TaskBoardDto fromTaskBoard(TaskBoard taskBoard) {
-        TaskBoardDto taskBoardDto = new TaskBoardDto();
-        taskBoardDto.setId(taskBoardDto.getId());
-        taskBoardDto.setTaskDescription(taskBoardDto.getTaskDescription());
-        taskBoardDto.setStartDate(taskBoardDto.getStartDate());
-        taskBoardDto.setEndDate(taskBoardDto.getEndDate());
-        taskBoardDto.setStatus(taskBoardDto.getStatus());
-        taskBoardDto.setPriority(taskBoardDto.getPriority());
-        taskBoardDto.setType(taskBoardDto.getType());
-        return taskBoardDto;
-    }
+//    public TaskBoard toTaskBoard() {
+//        TaskBoard taskBoard = new TaskBoard();
+//        taskBoard.setId(id);
+//        taskBoard.setTaskDescription(taskDescription);
+//        taskBoard.setStartDate(startDate);
+//        taskBoard.setEndDate(endDate);
+//        taskBoard.setStatus(status);
+//        taskBoard.setPriority(priority);
+//        taskBoard.setType(type);
+//        return taskBoard;
+//    }
+//
+//    public static TaskBoardDto fromTaskBoard(TaskBoard taskBoard) {
+//        TaskBoardDto taskBoardDto = new TaskBoardDto();
+//        taskBoardDto.setId(taskBoardDto.getId());
+//        taskBoardDto.setTaskDescription(taskBoardDto.getTaskDescription());
+//        taskBoardDto.setStartDate(taskBoardDto.getStartDate());
+//        taskBoardDto.setEndDate(taskBoardDto.getEndDate());
+//        taskBoardDto.setStatus(taskBoardDto.getStatus());
+//        taskBoardDto.setPriority(taskBoardDto.getPriority());
+//        taskBoardDto.setType(taskBoardDto.getType());
+//        return taskBoardDto;
+//    }
 }

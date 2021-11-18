@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
@@ -27,13 +28,7 @@ public class JwtTokenProvider {
 
     private final JwtUserDetailsService jwtUserDetailsService;
 
-
-//    @PostConstruct
-//    protected void init() {
-//        secret = Base64.getEncoder().encodeToString(secret.getBytes(StandardCharsets.UTF_8));
-//    }
-
-    public String createToken(String username, List<UserRole> roles) {
+    public String createToken(String username, Set<UserRole> roles) {
         Claims claims = Jwts.claims().setSubject(username);
         claims.put("roles", getRoleNames(roles));
 
@@ -71,14 +66,13 @@ public class JwtTokenProvider {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
             return !claims.getBody().getExpiration().before(new Date());
         } catch (JwtException | IllegalArgumentException e) {
-//            throw new JwtAuthenticationException("JWT Token is expired or invalid");
-            return false;
+            throw new JwtAuthenticationException("JWT Token is expired or invalid");
         }
     }
 
-    private List<String> getRoleNames(List<UserRole> userRoles) {
+    private List<String> getRoleNames(Set<UserRole> userRoles) {
         List<String> result = new ArrayList<>();
-        userRoles.forEach(userRole -> result.add(userRole.getName()));
+        userRoles.forEach(userRole -> result.add(userRole.getRole()));
         return result;
     }
 }

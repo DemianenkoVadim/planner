@@ -1,6 +1,5 @@
 package ua.com.alevel.plannerbox.service.impl;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,85 +7,165 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.com.alevel.plannerbox.dto.TaskBoardDto;
 import ua.com.alevel.plannerbox.entity.TaskBoard;
 import ua.com.alevel.plannerbox.entity.User;
+import ua.com.alevel.plannerbox.exceptions.TaskBoardNotFoundException;
 import ua.com.alevel.plannerbox.mapper.TaskBoardMapper;
 import ua.com.alevel.plannerbox.repository.TaskBoardRepository;
+import ua.com.alevel.plannerbox.security.SecurityContextHelper;
 import ua.com.alevel.plannerbox.service.TaskBoardService;
-import ua.com.alevel.plannerbox.service.UserService;
 
-import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Stream;
+
+import static ua.com.alevel.plannerbox.entity.status.TaskType.COMMON;
+import static ua.com.alevel.plannerbox.entity.status.TaskType.PERSONAL;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
+@Transactional
 public class TaskBoardServiceImpl implements TaskBoardService {
 
     private final TaskBoardRepository taskBoardRepository;
     private final TaskBoardMapper taskBoardMapper;
-    private final EntityManager em;
+    private final SecurityContextHelper securityContextHelper;
 
-//    @Autowired
-//    public TaskBoardServiceImpl(TaskBoardRepository taskBoardRepository) {
-//        this.taskBoardRepository = taskBoardRepository;
-//    }
+    @Autowired
+    public TaskBoardServiceImpl(TaskBoardRepository taskBoardRepository,
+                                TaskBoardMapper taskBoardMapper,
+                                SecurityContextHelper securityContextHelper) {
+        this.taskBoardRepository = taskBoardRepository;
+        this.taskBoardMapper = taskBoardMapper;
+        this.securityContextHelper = securityContextHelper;
+    }
 
+    // common
     @Override
-    @Transactional
     public TaskBoard createTaskBoard(TaskBoardDto taskBoardDto) {
         TaskBoard taskBoard = taskBoardMapper.dtoToModel(taskBoardDto);
-        List<User> users = taskBoard.getUsers().stream().map(u -> em.getReference(User.class, u.getId())).toList();
-        taskBoard.setUsers(users);
-        TaskBoard createdTaskBoard = taskBoardRepository.saveAndFlush(taskBoard);
-        log.info("Task created - task box: {} successfully created", createdTaskBoard);
+        taskBoard.setTaskAuthor(securityContextHelper.getCurrentUser());
+        TaskBoard createdTaskBoard = taskBoardRepository.save(taskBoard);
+        log.info("Task board: {} successfully created", createdTaskBoard);
         return createdTaskBoard;
     }
 
+    //common
     @Override
-    @Transactional
-    public TaskBoard updateTaskBoard(TaskBoardDto taskBoardDto) {
-//        getCurrentUser
-        TaskBoard taskBoard = taskBoardRepository.findTaskBoardByIdAndUsers(taskBoardDto.getId(), taskBoardDto.getUsers().stream().findFirst().get().getId())
-                .orElseThrow(() -> new IllegalStateException("TaskBoard with id " + taskBoardDto.getId() + " does not exist"));
-        taskBoard.setUpdated(LocalDateTime.now());
-//        TaskBoardMapper.INSTANCE.updateTaskBoardMapper(taskBoardDto, taskBoard);
-        taskBoardMapper.updateTaskBoardMapper(taskBoardDto, taskBoard);
-        return taskBoardRepository.save(taskBoard);
-    }
-
-    @Override
-    public void deleteTaskBoard(Long id) {
-        boolean taskBoardExist = taskBoardRepository.existsById(id);
-        if (!taskBoardExist) {
-            throw new IllegalStateException("TaskBoard with id " + id + " does not exist"); // TOdo is it wright to throw the exception or i need log
-        }
-        taskBoardRepository.deleteById(id);
-        log.info("delete - one task box with id: {} successfully deleted", id);
-    }
-
-    @Override
-    public List<TaskBoard> getAllTaskBoards() {
-        List<TaskBoard> allTaskBoards = taskBoardRepository.findAll();
-        log.info("get All task boxes - {} task boxes found", allTaskBoards.size());
+    public List<TaskBoard> findAllCurrentUsersTaskBoards() {
+        User currentTaskAuthor = securityContextHelper.getCurrentUser();
+        List<TaskBoard> allTaskBoards = taskBoardRepository.findTaskBoardsByTaskAuthor(currentTaskAuthor);
+        log.info("Find all current user task boxes - {} task boxes found", allTaskBoards); // TODO style log is wright???
         return allTaskBoards;
     }
 
+    // common
     @Override
-    public TaskBoard findById(Long id) {
-        TaskBoard oneTaskBoard = taskBoardRepository.findById(id)
-                .orElseThrow(() -> new IllegalStateException(" TaskBoard with id " + id + "does not exist"));
-        if (oneTaskBoard == null) {
-            log.warn("find by id - task box: {} does not found by id: {}", oneTaskBoard, id);
-            return null; //Todo what should i return
-        }
-        log.info("find by id - one task box: {} found by id: {}", oneTaskBoard, id);
-        return oneTaskBoard;
+    public List<TaskBoard> findAllCurrentUsersPersonalTaskBoards() {
+        User currentTaskAuthor = securityContextHelper.getCurrentUser();
+        List<TaskBoard> allPersonalTaskBoards = taskBoardRepository.findTaskBoardsByTaskAuthorAndType(currentTaskAuthor, PERSONAL);
+        log.info("Find all current user personal task boxes - {} task boxes found", allPersonalTaskBoards);
+        return allPersonalTaskBoards;
     }
 
+    //common
     @Override
-    public List<TaskBoard> findTaskBoardsByStartDateTime(LocalDateTime localDateTime) {
-//        List<TaskBoard> taskBoards = taskBoardRepository.findTaskBoardByStartT
-        return null;
+    public List<TaskBoard> findAllCurrentUsersCommonTaskBoards() {
+        User currentTaskAuthor = securityContextHelper.getCurrentUser();
+        List<TaskBoard> allCommonTaskBoards = taskBoardRepository.findTaskBoardsByTaskAuthorAndType(currentTaskAuthor, COMMON);
+        log.info("Find all current user common task boxes - {} task boxes found", allCommonTaskBoards);
+        return allCommonTaskBoards;
+    }
+
+    //common
+    //TODO check
+//    @Override
+//    public Optional<TaskBoard> findAllCurrentUsersPersonalTaskBoardsSortedByPriority() {
+//        User currentTaskAuthor = securityContextHelper.getCurrentUser();
+//        Optional<TaskBoard> allTaskBoard = taskBoardRepository.findTaskBoardsByTaskAuthorAndOrderByPriorityAsc(currentTaskAuthor);
+//        log.info("Find all current user personal task boxes sorted by priority - {} task boxes found", allTaskBoard);
+//        return allTaskBoard;
+//    }
+
+    //admin
+    @Override
+    public List<TaskBoard> findAllTaskBoards() {
+        List<TaskBoard> allTaskBoards = taskBoardRepository.findAll();// TODO method to find next one Optional????
+        log.info("Find all current user task boxes - {} task boxes found", allTaskBoards);
+        return allTaskBoards;
+    }
+
+    // admin
+    @Override
+    public List<TaskBoard> findAllTaskBoardsByUserId(Long userId) {
+        List<TaskBoard> allUserTaskBoards = taskBoardRepository.findTaskBoardByTaskAuthorId(userId);
+        log.info("All task boards by user id: {} successfully find", userId);
+        return allUserTaskBoards;
+    }
+
+    // admin
+    @Override
+    public List<TaskBoard> findAllPersonalTaskBoardsByUserId(Long userId) {
+        List<TaskBoard> allPersonalTaskBoards = taskBoardRepository.findTaskBoardsByTaskAuthorIdAndType(userId, PERSONAL);
+        log.info("All personal task boards by user with id {} successfully found", userId);
+        return allPersonalTaskBoards;
+    }
+
+    // admin
+    @Override
+    public List<TaskBoard> findAllCommonTaskBoardsByUserId(Long userId) {
+        List<TaskBoard> allCommonTaskBoards = taskBoardRepository.findTaskBoardsByTaskAuthorIdAndType(userId, COMMON);
+        log.info("All common task boards by user with id {}  successfully found", userId);
+        return allCommonTaskBoards;
+    }
+
+    //admin
+    //TODO doestn work?????
+    @Override
+    public TaskBoard findTaskBoardById(Long id) throws TaskBoardNotFoundException {
+        TaskBoard taskBoard = taskBoardRepository.findTaskBoardById(id);
+        return taskBoard;
+
+//        TaskBoard oneTaskBoard = taskBoardRepository.findById(id)
+//                .orElseThrow(() -> new TaskBoardNotFoundException(" TaskBoard with id " + id + "does not exist"));
+//        if (oneTaskBoard == null) {
+//            log.warn("Task board id: {} does not found by id: {}", oneTaskBoard, id);
+//            throw new TaskBoardNotFoundException("task box id: " + id + "does not found");
+//        }
+//        log.info("Task box: {} found by id: {}", oneTaskBoard, id);
+//        return oneTaskBoard;
+    }
+
+    //common
+    //TODO doesnt work
+
+    @Override
+    public List<TaskBoard> findTaskBoardsByStartDateTime(LocalDateTime dateTime) {
+        User currentTaskAuthor = securityContextHelper.getCurrentUser();
+        List<TaskBoard> startDateTimeTaskBoards = taskBoardRepository.findTaskBoardByStartDateAndTaskAuthor(dateTime, currentTaskAuthor);
+        log.info("Find all task board with start date {} by username {}", dateTime, currentTaskAuthor.getUsername());
+        return startDateTimeTaskBoards;
+    }
+
+    //common
+    //TODO check
+    @Override
+    public TaskBoard updateTaskBoard(TaskBoardDto taskBoardDto) {
+        User currentTaskAuthor = securityContextHelper.getCurrentUser();
+        TaskBoard taskBoard = taskBoardRepository.findTaskBoardByTaskAuthorAndId(currentTaskAuthor, taskBoardDto.getId());
+        taskBoard.setUpdated(LocalDateTime.now());
+        taskBoardMapper.updateTaskBoardMapper(taskBoardDto, taskBoard);
+        log.info("Task board with id {} task author {} successfully updated", taskBoardDto.getId(), currentTaskAuthor.getUsername());
+        return taskBoardRepository.save(taskBoard);
+    }
+
+    // common
+    @Override
+    public void deleteTaskBoard(Long id) throws TaskBoardNotFoundException {
+        User currentTaskAuthor = securityContextHelper.getCurrentUser();
+        boolean taskBoardExist = taskBoardRepository.existsById(id);
+        if (!taskBoardExist) {
+            log.warn("Task board with id: {} does not exist", id);
+            throw new TaskBoardNotFoundException("Task board with id " + id + " does not exist"); // TODO is it wright to throw the exception or i need log
+        }
+        taskBoardRepository.deleteByTaskAuthorAndId(currentTaskAuthor, id);
+        log.info("Task board with id: {} successfully deleted", id);
     }
 }

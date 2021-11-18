@@ -1,22 +1,38 @@
 package ua.com.alevel.plannerbox.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import ua.com.alevel.plannerbox.entity.TaskBoard;
 import ua.com.alevel.plannerbox.entity.User;
+import ua.com.alevel.plannerbox.entity.status.TaskType;
 
-import java.util.Collection;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface TaskBoardRepository extends JpaRepository<TaskBoard, Long> {
 
-    Optional<TaskBoard> findTaskBoardByTaskDescription(String taskDescription);
+    List<TaskBoard> findAll();
 
-    @Query("select t from TaskBoard t inner join User u   where t.id = ?1 and u.id = ?2")
-    Optional<TaskBoard> findTaskBoardByIdAndUsers(Long taskId, Long userId);
+    List<TaskBoard> findTaskBoardsByTaskAuthor(User taskAuthor);
 
-//    Optional<TaskBoard> findTaskBoardById_UserId(Long taskId, Long userId);
+    List<TaskBoard> findTaskBoardsByTaskAuthorAndType(User taskAuthor, TaskType type);
+
+//    Optional<TaskBoard> findTaskBoardsByTaskAuthorAndOrderByPriorityAsc(User taskAuthor); // TODO
+
+    List<TaskBoard> findTaskBoardByStartDateAndTaskAuthor(LocalDateTime startDate, User taskAuthor);
+
+    TaskBoard findTaskBoardByTaskAuthorAndId(User taskAuthor, Long id);
+
+    List<TaskBoard> findTaskBoardByTaskAuthorId(Long id);
+
+    List<TaskBoard> findTaskBoardsByTaskAuthorIdAndType(Long taskAuthorId, TaskType priority);
+
+    TaskBoard findTaskBoardById(Long id);
+
+    void deleteByTaskAuthorAndId(User taskAuthor, Long id);
+
+    List<TaskBoard> findTaskBoardByTaskDescription(String taskDescription);
 }
+

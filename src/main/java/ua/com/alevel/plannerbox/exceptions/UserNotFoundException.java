@@ -1,4 +1,4 @@
-package ua.com.alevel.plannerbox.exception;
+package ua.com.alevel.plannerbox.exceptions;
 
 public class UserNotFoundException extends Exception {
 

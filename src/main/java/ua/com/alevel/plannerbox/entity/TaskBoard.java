@@ -1,16 +1,15 @@
 package ua.com.alevel.plannerbox.entity;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 import ua.com.alevel.plannerbox.entity.status.TaskPriority;
 import ua.com.alevel.plannerbox.entity.status.TaskStatus;
 import ua.com.alevel.plannerbox.entity.status.TaskType;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table
@@ -18,6 +17,7 @@ import java.util.List;
 @Setter
 @ToString
 @RequiredArgsConstructor
+@AllArgsConstructor
 public class TaskBoard extends BaseEntity {
 
     @Column(name = "description")
@@ -41,10 +41,17 @@ public class TaskBoard extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private TaskType type;
 
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    @ToString.Exclude
+    private User taskAuthor;
+
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_task",
-            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "task_id", referencedColumnName = "id")})
+            joinColumns = {@JoinColumn(name = "task_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")})
     @ToString.Exclude
-    private List<User> users;
+    private Set<User> users;
 }
