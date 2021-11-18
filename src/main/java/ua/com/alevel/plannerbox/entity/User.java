@@ -44,16 +44,19 @@ public class User extends BaseEntity {
     private List<TaskBoard> TaskBoard;
 
     @JsonIgnore
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
+    @ToString.Exclude
     private Set<UserRole> roles;
 
+
     @JsonIgnore
-    @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
     @ToString.Exclude
     private List<TaskBoard> task;
+
 
     public User(String username,
                 String firstName,
@@ -67,5 +70,28 @@ public class User extends BaseEntity {
         this.email = email;
         this.password = password;
         this.status = status;
+    }
+
+    public void addRole(UserRole userRole) {
+        roles.add(userRole);
+        userRole.getUsers().add(this);
+    }
+
+    public void removeRole(UserRole userRole) {
+        roles.remove(userRole);
+        userRole.getUsers().remove(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User user)) return false;
+
+        return username.equals(user.username);
+    }
+
+    @Override
+    public int hashCode() {
+        return username.hashCode();
     }
 }

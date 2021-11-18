@@ -9,5 +9,4 @@ class PlannerBoxApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }

@@ -8,7 +8,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import ua.com.alevel.plannerbox.entity.UserRole;
-import ua.com.alevel.plannerbox.security.JwtUserDetailsService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -35,7 +34,7 @@ public class JwtTokenProvider {
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
 
-        return Jwts.builder()//
+        return Jwts.builder()//-
                 .setClaims(claims)//
                 .setIssuedAt(now)//
                 .setExpiration(validity)//

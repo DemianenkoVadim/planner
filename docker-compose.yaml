@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+
+  db:
+    image: mysql:8.0
+    command: -h localhost -u root --default-authentication-plugin=mysql_native_password
+#    volumes:
+#      - ./mysql:/etc/mysql/conf.d
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: pa$$word
+      MYSQL_DATABASE: plannerbox
+#      MYSQL_USER: admin
+#      MYSQL_PASSWORD: test
+
+  app:
+    image: openjdk:17-alpine
+    volumes:
+      - ./target/plannerbox-0.0.1-SNAPSHOT.jar:/app/planner.jar
+    ports:
+      - '8088:8088'
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/plannerbox?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC
+      SPRING_DATASOURCE_PASSWORD: pa$$word
+    command: java -jar /app/planner.jar

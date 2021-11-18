@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import ua.com.alevel.plannerbox.service.UserRoleService;
 import ua.com.alevel.plannerbox.service.UserService;
-import ua.com.alevel.plannerbox.util.FirstAccesses;
+import ua.com.alevel.plannerbox.util.FirstAccess;
 
 
 @SpringBootApplication
@@ -18,7 +18,7 @@ public class PlannerBoxApplication {
 
     @Bean
     CommandLineRunner runner(UserService userService, UserRoleService userRoleService) {
-        return new FirstAccesses().firstRunApplication(userService, userRoleService);
+        return new FirstAccess().firstRunApplication(userService, userRoleService);
     }
 }
 

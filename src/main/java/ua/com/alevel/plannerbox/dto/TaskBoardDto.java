@@ -3,14 +3,13 @@ package ua.com.alevel.plannerbox.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-import ua.com.alevel.plannerbox.entity.TaskBoard;
 import ua.com.alevel.plannerbox.entity.status.TaskPriority;
 import ua.com.alevel.plannerbox.entity.status.TaskStatus;
 import ua.com.alevel.plannerbox.entity.status.TaskType;
 
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -39,29 +38,5 @@ public class TaskBoardDto {
     @NotNull(message = "Field type should not be empty")
     private TaskType type;
 
-    private List<UserDto> users;
-
-//    public TaskBoard toTaskBoard() {
-//        TaskBoard taskBoard = new TaskBoard();
-//        taskBoard.setId(id);
-//        taskBoard.setTaskDescription(taskDescription);
-//        taskBoard.setStartDate(startDate);
-//        taskBoard.setEndDate(endDate);
-//        taskBoard.setStatus(status);
-//        taskBoard.setPriority(priority);
-//        taskBoard.setType(type);
-//        return taskBoard;
-//    }
-//
-//    public static TaskBoardDto fromTaskBoard(TaskBoard taskBoard) {
-//        TaskBoardDto taskBoardDto = new TaskBoardDto();
-//        taskBoardDto.setId(taskBoardDto.getId());
-//        taskBoardDto.setTaskDescription(taskBoardDto.getTaskDescription());
-//        taskBoardDto.setStartDate(taskBoardDto.getStartDate());
-//        taskBoardDto.setEndDate(taskBoardDto.getEndDate());
-//        taskBoardDto.setStatus(taskBoardDto.getStatus());
-//        taskBoardDto.setPriority(taskBoardDto.getPriority());
-//        taskBoardDto.setType(taskBoardDto.getType());
-//        return taskBoardDto;
-//    }
+    private Set<UserDto> users;
 }

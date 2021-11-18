@@ -1,6 +1,5 @@
 package ua.com.alevel.plannerbox.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import ua.com.alevel.plannerbox.entity.status.TaskPriority;
@@ -9,6 +8,7 @@ import ua.com.alevel.plannerbox.entity.status.TaskType;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -48,10 +48,23 @@ public class TaskBoard extends BaseEntity {
     private User taskAuthor;
 
     @JsonIgnore
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_task",
             joinColumns = {@JoinColumn(name = "task_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")})
     @ToString.Exclude
     private Set<User> users;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof TaskBoard taskBoard)) return false;
+
+        return Objects.equals(taskAuthor, taskBoard.taskAuthor);
+    }
+
+    @Override
+    public int hashCode() {
+        return taskAuthor != null ? taskAuthor.hashCode() : 0;
+    }
 }

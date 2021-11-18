@@ -2,7 +2,6 @@ package ua.com.alevel.plannerbox.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-import ua.com.alevel.plannerbox.entity.User;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;

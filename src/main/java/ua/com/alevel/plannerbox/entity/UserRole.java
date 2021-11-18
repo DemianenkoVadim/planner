@@ -13,18 +13,13 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-//@RequiredArgsConstructor
 public class UserRole extends BaseEntity {
-
-    public UserRole(String role) {
-        this.role = role;
-    }
 
     @Column(name = "role")
     private String role;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY) // todo ???
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
     @ToString.Exclude
     private List<User> users;
 }
