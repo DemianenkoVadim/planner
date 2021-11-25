@@ -1,4 +1,4 @@
-package ua.com.alevel.plannerbox.security.jwt;
+package ua.com.alevel.plannerbox.security.impl;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;

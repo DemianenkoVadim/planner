@@ -79,18 +79,9 @@ public class TaskBoardServiceImpl implements TaskBoardService {
         return allCommonTaskBoards;
     }
 
-    //TODO check
-//    @Override
-//    public Optional<TaskBoard> findAllCurrentUsersPersonalTaskBoardsSortedByPriority() {
-//        User currentTaskAuthor = securityContextHelper.getCurrentUser();
-//        Optional<TaskBoard> allTaskBoard = taskBoardRepository.findTaskBoardsByTaskAuthorAndOrderByPriorityAsc(currentTaskAuthor);
-//        log.info("Find all current user personal task boxes sorted by priority - {} task boxes found", allTaskBoard);
-//        return allTaskBoard;
-//    }
-
     @Override
     public List<TaskBoard> findAllTaskBoards() {
-        List<TaskBoard> allTaskBoards = taskBoardRepository.findAll();// TODO method to find next one Optional????
+        List<TaskBoard> allTaskBoards = taskBoardRepository.findAll();
         log.info("Fetching all task boards");
         return allTaskBoards;
     }
@@ -124,7 +115,6 @@ public class TaskBoardServiceImpl implements TaskBoardService {
         return oneTaskBoard;
     }
 
-    //TODO doesnt work
     @Override
     public List<TaskBoard> findTaskBoardsByStartDateTime(LocalDateTime dateTime) {
         User currentTaskAuthor = securityContextHelper.getCurrentUser();
@@ -176,7 +166,6 @@ public class TaskBoardServiceImpl implements TaskBoardService {
         return taskBoard;
     }
 
-    //TODO check
     @Override
     public TaskBoard updateTaskBoard(TaskBoardDto taskBoardDto) {
         User currentTaskAuthor = securityContextHelper.getCurrentUser();

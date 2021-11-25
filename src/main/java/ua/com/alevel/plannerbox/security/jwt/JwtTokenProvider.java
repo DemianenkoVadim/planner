@@ -8,6 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import ua.com.alevel.plannerbox.entity.UserRole;
+import ua.com.alevel.plannerbox.exceptions.JwtAuthenticationException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;

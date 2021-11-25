@@ -33,7 +33,6 @@ class TaskBoardServiceImplTest {
 
     private TaskBoardService taskBoardService;
 
-
     @BeforeEach
     void setUp() {
         taskBoardService = new TaskBoardServiceImpl(
@@ -45,7 +44,6 @@ class TaskBoardServiceImplTest {
 
     @Test
     void canCreateNewTaskBoard() {
-        // given
         var taskBoardId = 1L;
         TaskBoardDto testTaskBoardDto = new TaskBoardDto();
 
@@ -56,10 +54,8 @@ class TaskBoardServiceImplTest {
         when(securityContextHelper.getCurrentUser()).thenReturn(testUser);
         when(taskBoardRepository.save(testTaskBoard)).thenReturn(testTaskBoard);
 
-        // when
         TaskBoard actualTaskBoard = taskBoardService.createTaskBoard(testTaskBoardDto);
 
-        // then
         assertThat(actualTaskBoard.getId()).isEqualTo(testTaskBoard.getId());
         assertThat(actualTaskBoard.getCreated()).isNotNull();
         assertThat(actualTaskBoard.getUpdated()).isNotNull();
@@ -73,23 +69,17 @@ class TaskBoardServiceImplTest {
 
     @Test
     void findAllCurrentUsersTaskBoards() {
-        // given
         User testUser = getTestUser();
+
         when(securityContextHelper.getCurrentUser()).thenReturn(testUser);
         when(taskBoardRepository.findTaskBoardsByTaskAuthor(testUser)).thenReturn(List.of(new TaskBoard()));
-        // when
+
         List<TaskBoard> allTasks = taskBoardService.findAllCurrentUsersTaskBoards();
-        // then
+
         assertThat(allTasks.size()).isEqualTo(1);
 
         verify(securityContextHelper, times(1)).getCurrentUser();
         verify(taskBoardRepository, only()).findTaskBoardsByTaskAuthor(testUser);
-    }
-
-    @Test
-    void addNewUserToCommonTaskBoard() {
-
-
     }
 
     private User getTestUser() {

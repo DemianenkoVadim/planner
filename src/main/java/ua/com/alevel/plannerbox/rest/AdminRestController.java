@@ -36,4 +36,3 @@ public class AdminRestController {
         adminService.changeUserStatus(id, request.getUserStatus());
     }
 }
-

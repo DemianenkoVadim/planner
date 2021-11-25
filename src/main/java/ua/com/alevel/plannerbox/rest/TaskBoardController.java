@@ -48,11 +48,6 @@ public class TaskBoardController {
         return ResponseEntity.ok(taskBoardService.findAllCurrentUsersCommonTaskBoards());
     }
 
-//    @GetMapping(path = "/personals/currentUser/priority")
-//    public ResponseEntity<Optional<TaskBoard>> findAllCurrentUsersPersonalTaskBoardsSortedByPriority() {
-//        return ResponseEntity.ok(taskBoardService.findAllCurrentUsersPersonalTaskBoardsSortedByPriority());
-//    }
-
     @GetMapping
     public ResponseEntity<List<TaskBoard>> findAllTaskBoards() {
         return ResponseEntity.ok(taskBoardService.findAllTaskBoards());

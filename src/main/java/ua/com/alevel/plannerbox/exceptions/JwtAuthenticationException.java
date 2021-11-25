@@ -1,4 +1,4 @@
-package ua.com.alevel.plannerbox.security.jwt;
+package ua.com.alevel.plannerbox.exceptions;
 
 import org.springframework.security.core.AuthenticationException;
 

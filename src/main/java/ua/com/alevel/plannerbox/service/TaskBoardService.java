@@ -16,8 +16,6 @@ public interface TaskBoardService {
 
     List<TaskBoard> findAllCurrentUsersTaskBoards();
 
-//    Optional<TaskBoard> findAllCurrentUsersPersonalTaskBoardsSortedByPriority();
-
     List<TaskBoard> findAllTaskBoards();
 
     List<TaskBoard> findAllCurrentUsersPersonalTaskBoards();

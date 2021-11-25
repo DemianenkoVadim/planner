@@ -6,7 +6,6 @@ import ua.com.alevel.plannerbox.entity.TaskBoard;
 import ua.com.alevel.plannerbox.entity.User;
 import ua.com.alevel.plannerbox.entity.status.TaskType;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,8 +18,6 @@ public interface TaskBoardRepository extends JpaRepository<TaskBoard, Long> {
 
     List<TaskBoard> findTaskBoardsByTaskAuthorAndType(User taskAuthor, TaskType type);
 
-//    Optional<TaskBoard> findTaskBoardsByTaskAuthorAndOrderByPriorityAsc(User taskAuthor); // TODO
-
     List<TaskBoard> findTaskBoardsByStartDateAndTaskAuthor(LocalDateTime startDate, User taskAuthor);
 
     TaskBoard findTaskBoardByTaskAuthorAndId(User taskAuthor, Long id);
@@ -28,8 +25,6 @@ public interface TaskBoardRepository extends JpaRepository<TaskBoard, Long> {
     List<TaskBoard> findTaskBoardByTaskAuthorId(Long id);
 
     List<TaskBoard> findTaskBoardsByTaskAuthorIdAndType(Long taskAuthorId, TaskType priority);
-
-    TaskBoard findTaskBoardById(Long id);
 
     void deleteByTaskAuthorAndId(User taskAuthor, Long id);
 

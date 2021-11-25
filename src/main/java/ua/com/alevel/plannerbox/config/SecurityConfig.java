@@ -36,16 +36,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.apply(CommonSecurityConfiguration.commonSecurityConfiguration())
-//            .httpBasic().disable()
-//            .csrf().disable()
-//            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//            .and()
-//            .authorizeRequests()
-//            .antMatchers(HttpMethod.POST, LOGIN_ENDPOINT).permitAll()
-//            .antMatchers(HttpMethod.POST, USER_CONTROLLER).permitAll()
-//            .antMatchers(USER_CONTROLLER + "*").permitAll()
-//            .antMatchers(ADMIN_ENDPOINT).hasRole(ADMIN_ROLE)
-//            .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }
