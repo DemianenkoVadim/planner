@@ -1,5 +1,8 @@
 HELP.md
 file.http
+mvnw
+mvnw.cmd
+.mvn
 
 target/
 !.mvn/wrapper/maven-wrapper.jar
