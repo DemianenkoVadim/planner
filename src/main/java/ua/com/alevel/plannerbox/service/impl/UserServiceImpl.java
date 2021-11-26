@@ -25,6 +25,7 @@ import java.util.Set;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -34,7 +35,6 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
     @Override
-    @Transactional
     public User createAdmin() {
         User admin = new User();
         admin.setUsername("admin");
@@ -50,7 +50,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public User registerUser(UserDto userDto) {
         if (userRepository.findByUsername(userDto.getUsername()) != null) {
             throw new UserAlreadyExistException("Username already exist");
@@ -73,7 +72,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public List<User> findAllUsers() {
         List<User> allUsers = userRepository.findAll();
         log.info("Fetching all users");
@@ -81,7 +79,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public Optional<User> findUserById(Long id) {
         log.info("Start find user by id: {}", id);
         Optional<User> user = userRepository.findUserById(id);
@@ -92,9 +89,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public void deleteUser(Long id) throws UserNotFoundException {
-        if (!userRepository.existsById(id)) {
+        Optional<User> user = userRepository.findUserById(id);
+        if (user.isEmpty()) {
             throw new UserNotFoundException("User with id " + id + " does not found");
         }
         log.info("Start delete user by id: {}", id);
@@ -103,7 +100,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public User updateUser(UserDto userDto) {
         String currentUser = securityContextHelper.getCurrentUser().getUsername();
         User user = userRepository.findByUsernameAndId(currentUser, userDto.getId());

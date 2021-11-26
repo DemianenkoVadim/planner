@@ -179,9 +179,9 @@ public class TaskBoardServiceImpl implements TaskBoardService {
     @Override
     public void deleteTaskBoard(Long id) throws TaskBoardNotFoundException {
         User currentTaskAuthor = securityContextHelper.getCurrentUser();
-        boolean taskBoardExist = taskBoardRepository.existsById(id);
-        if (!taskBoardExist) {
-            log.warn("Task board with id: {} does not exist", id);
+        TaskBoard taskBoardExist = taskBoardRepository.findTaskBoardByTaskAuthorAndId(currentTaskAuthor, id);
+        if (taskBoardExist == null) {
+            log.warn("Task board with id: {} does not exist for current username {} ", id, currentTaskAuthor.getUsername());
             throw new TaskBoardNotFoundException("Task board with id " + id + " does not exist");
         }
         taskBoardRepository.deleteByTaskAuthorAndId(currentTaskAuthor, id);

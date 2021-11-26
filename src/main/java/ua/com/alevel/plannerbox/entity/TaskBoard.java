@@ -48,7 +48,7 @@ public class TaskBoard extends BaseEntity {
     private User taskAuthor;
 
     @JsonIgnore
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "user_task",
             joinColumns = {@JoinColumn(name = "task_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")})

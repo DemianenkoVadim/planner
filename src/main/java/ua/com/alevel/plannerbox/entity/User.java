@@ -53,7 +53,7 @@ public class User extends BaseEntity {
 
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<TaskBoard> task;
 
